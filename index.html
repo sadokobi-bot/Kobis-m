@@ -1143,7 +1143,7 @@
     </div>
 </div>
 
-<script>
+<script type="module">
     // --- Firebase & Firestore Setup ---
     const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
     const appId = typeof __app_id !== 'undefined' ? __app_id : 'protein-tracker-default';
@@ -1673,6 +1673,16 @@
             }
         }, 1000);
     }
+
+    window.updateMealTimes = updateMealTimes;
+    window.loadSpecificMenu = loadSpecificMenu;
+    window.generateRandomMenu = generateRandomMenu;
+    window.resetTracker = resetTracker;
+    window.openStatsModal = openStatsModal;
+    window.toggleCheck = toggleCheck;
+    window.toggleModal = toggleModal;
+    window.closeModal = closeModal;
+    window.startWaterTimer = startWaterTimer;
 </script>
 
 </body>
