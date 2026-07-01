@@ -7,6 +7,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js" type="module"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js" type="module"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js" type="module"></script>
     <style>
         :root {
             --bg-gradient-1: #0f172a;
@@ -63,6 +67,7 @@
             line-height: 1.6;
         }
 
+        /* Animated background orbs */
         body::before {
             content: '';
             position: fixed;
@@ -92,9 +97,18 @@
             z-index: 1;
         }
 
+        /* Header */
         .header {
             margin-bottom: 28px;
             animation: fadeInDown 0.8s ease-out;
+            position: relative;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
         }
 
         .logo-badge {
@@ -109,7 +123,6 @@
             font-weight: 600;
             color: var(--primary-light);
             letter-spacing: 1.5px;
-            margin-bottom: 16px;
             backdrop-filter: blur(10px);
         }
 
@@ -121,6 +134,28 @@
             background: var(--primary);
             box-shadow: 0 0 12px var(--primary);
             animation: pulse 2s ease-in-out infinite;
+        }
+
+        .stats-btn-top {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-main);
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            backdrop-filter: blur(10px);
+        }
+
+        .stats-btn-top:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
         }
 
         @keyframes pulse {
@@ -152,6 +187,7 @@
             font-weight: 400;
         }
 
+        /* Setup Box */
         .setup-box {
             background: rgba(30, 41, 59, 0.6);
             backdrop-filter: blur(20px);
@@ -296,6 +332,7 @@
             box-shadow: 0 4px 14px rgba(16, 185, 129, 0.15);
         }
 
+        /* Menu Card */
         .menu-card {
             background: rgba(30, 41, 59, 0.5);
             backdrop-filter: blur(20px);
@@ -335,6 +372,7 @@
             letter-spacing: -0.3px;
         }
 
+        /* Macro Tracker - Premium Design */
         .macro-tracker-box {
             background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(59, 130, 246, 0.1) 100%);
             border: 1px solid rgba(16, 185, 129, 0.2);
@@ -472,6 +510,7 @@
             margin-top: 2px;
         }
 
+        /* Meal Items */
         .meal-item {
             background: rgba(30, 41, 59, 0.5);
             backdrop-filter: blur(10px);
@@ -643,6 +682,7 @@
             border-color: rgba(16, 185, 129, 0.3);
         }
 
+        /* Modals */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -731,6 +771,85 @@
             border-color: var(--danger);
             color: var(--danger);
             transform: rotate(90deg);
+        }
+
+        /* Stats Modal Specifics */
+        .stats-chart-container {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            height: 200px;
+            margin-top: 20px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--card-border);
+            position: relative;
+        }
+        
+        .stat-bar-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            height: 100%;
+            position: relative;
+        }
+
+        .stat-bar {
+            width: 100%;
+            max-width: 40px;
+            background: linear-gradient(180deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 6px 6px 0 0;
+            min-height: 5px;
+            transition: height 0.5s ease-out;
+            position: relative;
+        }
+
+        .stat-bar:hover {
+            background: linear-gradient(180deg, var(--primary-light) 0%, var(--primary) 100%);
+            box-shadow: 0 0 10px var(--primary-glow);
+        }
+
+        .stat-value {
+            position: absolute;
+            top: -22px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .stat-day {
+            position: absolute;
+            bottom: -22px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .stats-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .stats-summary-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stats-summary-val {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-light);
+        }
+
+        .stats-summary-lbl {
+            font-size: 0.8rem;
+            color: var(--text-muted);
         }
 
         .recipe-meta {
@@ -870,6 +989,8 @@
             .menu-card { padding: 18px; }
             .macro-tracker-box { padding: 16px; }
             .timer-box { flex-direction: column; text-align: center; }
+            .stats-btn-top { padding: 6px 10px; font-size: 0.75rem; }
+            .stats-btn-top span { display: none; }
         }
 
         ::-webkit-scrollbar { width: 8px; }
@@ -890,7 +1011,13 @@
 
 <div class="container">
     <div class="header">
-        <div class="logo-badge">LIVE TRACKING</div>
+        <div class="top-bar">
+            <div class="logo-badge">LIVE TRACKING</div>
+            <button class="stats-btn-top" onclick="openStatsModal()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+                <span>סטטיסטיקות ומעקב</span>
+            </button>
+        </div>
         <h1>PROTEIN TRACKER</h1>
         <div class="subtitle">תפריטים יומיים מגוונים ועשירים בחלבון ללא בשר מעובד</div>
     </div>
@@ -967,11 +1094,12 @@
     </div>
 </div>
 
-<div class="modal-overlay" id="recipeModal" onclick="closeModal(event)">
+<!-- חלון מתכון -->
+<div class="modal-overlay" id="recipeModal" onclick="closeModal(event, 'recipeModal')">
     <div class="modal-card" onclick="event.stopPropagation()">
         <div class="modal-header">
             <h3 class="modal-title" id="modalRecipeTitle">שם המנה</h3>
-            <button class="modal-close" onclick="toggleModal(false)">✕</button>
+            <button class="modal-close" onclick="toggleModal('recipeModal', false)">✕</button>
         </div>
         <div class="recipe-meta" id="modalRecipeMeta">🕒 זמן הכנה: --</div>
         
@@ -983,8 +1111,203 @@
     </div>
 </div>
 
+<!-- חלון סטטיסטיקות -->
+<div class="modal-overlay" id="statsModal" onclick="closeModal(event, 'statsModal')">
+    <div class="modal-card" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <h3 class="modal-title">📊 היסטוריית צריכת חלבון</h3>
+            <button class="modal-close" onclick="toggleModal('statsModal', false)">✕</button>
+        </div>
+        
+        <div style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 10px;">
+            מעקב אחר צריכת החלבון היומית שלך בשבוע האחרון (לפי סימון הוי בארוחות).
+        </div>
+
+        <div class="stats-chart-container" id="statsChart">
+            <!-- יתמלא על ידי JS -->
+            <div style="width: 100%; text-align: center; color: var(--text-muted); padding-top: 50px;">
+                טוען נתונים מהענן...
+            </div>
+        </div>
+
+        <div class="stats-summary">
+            <div class="stats-summary-card">
+                <div class="stats-summary-val" id="avgProteinStat">0g</div>
+                <div class="stats-summary-lbl">ממוצע שבועי</div>
+            </div>
+            <div class="stats-summary-card">
+                <div class="stats-summary-val" id="bestDayStat">0g</div>
+                <div class="stats-summary-lbl">היום החזק ביותר</div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
-    // 14 תפריטים עשירים ומגוונים: ארוחות בוקר אמיתיות (ללא שייקים ואבקות), המון גיוון בארוחות הערב, ושילוב חכם של חטיפי חלבון בארוחות ביניים בלבד!
+    // --- Firebase & Firestore Setup ---
+    const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'protein-tracker-default';
+    
+    let db;
+    let auth;
+    let currentUser = null;
+
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, query, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    if (Object.keys(firebaseConfig).length > 0) {
+        const app = initializeApp(firebaseConfig);
+        auth = getAuth(app);
+        db = getFirestore(app);
+
+        // שימוש ב-Custom Token אם קיים, אחרת חיבור אנונימי
+        const initAuth = async () => {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (error) {
+                console.error("Auth error:", error);
+                showNotification("שגיאה בחיבור למסד הנתונים", "❌");
+            }
+        };
+
+        initAuth();
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                loadTodayProgressFromDB();
+            } else {
+                currentUser = null;
+            }
+        });
+    }
+
+    // פונקציות שמירה ושליפה של נתונים מהענן
+    function getTodayDateString() {
+        const today = new Date();
+        return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    }
+
+    async function saveProgressToDB(consumedPro) {
+        if (!currentUser || !db) return;
+        
+        const dateStr = getTodayDateString();
+        const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'daily_stats', dateStr);
+        
+        try {
+            await setDoc(docRef, {
+                date: dateStr,
+                protein_consumed: consumedPro,
+                timestamp: new Date().toISOString()
+            }, { merge: true });
+        } catch (e) {
+            console.error("Error saving stats: ", e);
+        }
+    }
+
+    async function loadTodayProgressFromDB() {
+        if (!currentUser || !db || !currentMenu) return;
+
+        const dateStr = getTodayDateString();
+        const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'daily_stats', dateStr);
+        
+        try {
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                // המטרה כאן היא רק לאחזר את הכמות ההיסטורית בשביל התצוגה הראשונית, 
+                // אנחנו נסמוך על שמירת הסטייט המקומי עבור הוי.
+                // בעתיד אפשר לשמור פה גם את מערך ה-checkedState כדי להחזיר בדיוק את אותן ארוחות.
+            }
+        } catch (e) {
+            console.error("Error loading stats: ", e);
+        }
+    }
+
+    let statsUnsubscribe = null;
+    function openStatsModal() {
+        toggleModal('statsModal', true);
+        
+        if (!currentUser || !db) {
+            document.getElementById('statsChart').innerHTML = '<div style="width: 100%; text-align: center; color: var(--danger); padding-top: 50px;">שגיאת חיבור לנתונים.</div>';
+            return;
+        }
+
+        const statsRef = collection(db, 'artifacts', appId, 'users', currentUser.uid, 'daily_stats');
+        
+        if (statsUnsubscribe) statsUnsubscribe();
+        
+        statsUnsubscribe = onSnapshot(statsRef, (snapshot) => {
+            const dataMap = {};
+            snapshot.forEach(doc => {
+                dataMap[doc.data().date] = doc.data().protein_consumed || 0;
+            });
+            renderStatsChart(dataMap);
+        }, (error) => {
+            console.error("Error fetching stats:", error);
+            document.getElementById('statsChart').innerHTML = '<div style="width: 100%; text-align: center; color: var(--danger); padding-top: 50px;">שגיאה בטעינת הנתונים.</div>';
+        });
+    }
+
+    function renderStatsChart(dataMap) {
+        const chartContainer = document.getElementById('statsChart');
+        chartContainer.innerHTML = '';
+        
+        // יצירת מערך של 7 הימים האחרונים
+        const last7Days = [];
+        const today = new Date();
+        for (let i = 6; i >= 0; i--) {
+            const d = new Date(today);
+            d.setDate(today.getDate() - i);
+            const dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+            const displayDay = ["א'", "ב'", "ג'", "ד'", "ה'", "ו'", "ש'"][d.getDay()];
+            
+            last7Days.push({
+                dateStr: dateStr,
+                displayDay: i === 0 ? "היום" : displayDay,
+                val: dataMap[dateStr] || 0
+            });
+        }
+
+        const maxVal = Math.max(...last7Days.map(d => d.val), 150); // מקסימום בגרף (לפחות 150 כדי שייראה טוב)
+        let totalVal = 0;
+        let bestDayVal = 0;
+
+        last7Days.forEach(day => {
+            totalVal += day.val;
+            if (day.val > bestDayVal) bestDayVal = day.val;
+
+            const heightPct = Math.min((day.val / maxVal) * 100, 100);
+            
+            const barWrapper = document.createElement('div');
+            barWrapper.className = 'stat-bar-wrapper';
+            
+            // צבע שונה קצת להיום או לימים חלשים
+            let barStyle = '';
+            if (day.val === 0) barStyle = 'background: rgba(255,255,255,0.1);';
+            if (day.displayDay === 'היום' && day.val > 0) barStyle = 'background: linear-gradient(180deg, var(--accent-light) 0%, var(--accent) 100%);';
+
+            barWrapper.innerHTML = `
+                <div class="stat-value">${day.val > 0 ? day.val + 'g' : ''}</div>
+                <div class="stat-bar" style="height: ${heightPct}%; ${barStyle}"></div>
+                <div class="stat-day">${day.displayDay}</div>
+            `;
+            chartContainer.appendChild(barWrapper);
+        });
+
+        const activeDays = last7Days.filter(d => d.val > 0).length;
+        const avg = activeDays > 0 ? Math.round(totalVal / activeDays) : 0;
+        
+        document.getElementById('avgProteinStat').innerText = avg + 'g';
+        document.getElementById('bestDayStat').innerText = bestDayVal + 'g';
+    }
+
+
+    // --- Menu Data & UI Logic ---
     const menus = [
         {
             name: "תפריט 1: חביתה עשירה ופיצה דקה מפיתת כוסמין",
@@ -1258,6 +1581,9 @@
         
         const pct = target > 0 ? (consumed / target) * 100 : 0;
         document.getElementById('proteinBar').style.width = `${Math.min(pct, 100)}%`;
+
+        // Save progress to cloud on every change
+        saveProgressToDB(consumed);
     }
 
     function resetTracker() {
@@ -1293,17 +1619,17 @@
             stepsContainer.appendChild(li);
         });
 
-        toggleModal(true);
+        toggleModal('recipeModal', true);
     }
 
-    function toggleModal(show) {
-        const modal = document.getElementById('recipeModal');
+    function toggleModal(modalId, show) {
+        const modal = document.getElementById(modalId);
         if (show) modal.classList.add('active');
         else modal.classList.remove('active');
     }
 
-    function closeModal(event) {
-        toggleModal(false);
+    function closeModal(event, modalId) {
+        toggleModal(modalId, false);
     }
 
     function showNotification(message, icon = "🔔") {
